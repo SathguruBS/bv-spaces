@@ -140,9 +140,17 @@
       position: sticky;
       top: 0;
       z-index: 50;
+    }
+
+    .nav::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
       background: rgba(250, 247, 240, .9);
       backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--line)
+      border-bottom: 1px solid var(--line);
+      pointer-events: none;
     }
 
     .nav-in {
@@ -618,7 +626,9 @@
 
       .nav-links {
         position: fixed;
-        inset: 0 0 0 auto;
+        top: 0;
+        right: 0;
+        bottom: 0;
         width: min(78vw, 320px);
         background: var(--paper);
         flex-direction: column;
@@ -628,7 +638,8 @@
         padding: 40px;
         transform: translateX(100%);
         transition: .35s;
-        box-shadow: -20px 0 50px -30px rgba(30, 42, 38, .5)
+        box-shadow: -20px 0 50px -30px rgba(30, 42, 38, .5);
+        z-index: 55;
       }
 
       .nav-links.open {
@@ -638,6 +649,18 @@
       .hamburger {
         display: block;
         z-index: 60
+      }
+
+      .hamburger.open span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+      }
+
+      .hamburger.open span:nth-child(2) {
+        opacity: 0;
+      }
+
+      .hamburger.open span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
       }
     }
 
@@ -724,12 +747,12 @@
   <!-- NAV -->
   <header class="nav">
     <div class="nav-in">
-      <a class="nav-logo" href="bv-home.html" aria-label="BV home">
+      <a class="nav-logo" href="index.html" aria-label="BV home">
       <img src="ui-kit/bv-logo-primary.svg" alt="BV Interiors & Exteriors Logo">
     </a>
       <nav>
         <ul class="nav-links" id="menu">
-          <li><a href="bv-home.html">Home</a></li>
+          <li><a href="index.html">Home</a></li>
           <li><a href="bv-work.html" class="active">Work</a></li>
           <li><a href="bv-about.html">About</a></li>
           <li><a href="bv-contact.html">Contact</a></li>
@@ -941,7 +964,14 @@
 
   <script>
     const burger = document.getElementById('burger'), menu = document.getElementById('menu');
-    burger.addEventListener('click', () => menu.classList.toggle('open'));
+    burger.addEventListener('click', () => {
+      burger.classList.toggle('open');
+      menu.classList.toggle('open');
+    });
+    menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      burger.classList.remove('open');
+      menu.classList.remove('open');
+    }));
     document.querySelectorAll('.lang').forEach(l => {
       const sec = document.getElementById(l.dataset.target);
       l.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
